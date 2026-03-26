@@ -1,0 +1,11 @@
+输入案情文本
+    ↓
+assess_case() 计算原始风险分 (0-100)
+    ↓
+_apply_level_floor() 根据触发规则抬升最低分
+    ↓
+classify_level() 查 LEVEL_THRESHOLDS 定级
+    ↓
+LEVEL_ACTIONS[level] 获取处置建议
+    ↓
+输出 RiskAssessment 结果

@@ -1,0 +1,53 @@
+{
+  "name": "risk-rag-kb",
+  "version": "v20260325.1",
+  "description": "Classified RAG assets for risk assessment project",
+  "build_args": {
+    "train_file": "E:\\风险预测和评估\\risk_data\\train.jsonl",
+    "val_file": "E:\\风险预测和评估\\risk_data\\val.jsonl",
+    "include_val": false,
+    "output_dir": "E:\\风险预测和评估\\RAG_data",
+    "output": "E:\\风险预测和评估\\RAG_data\\kb_documents.jsonl"
+  },
+  "stats": {
+    "version": "v20260325.1",
+    "built_at_utc": "2026-03-25T07:14:16.091562+00:00",
+    "include_val": false,
+    "source_rows": {
+      "train": 560
+    },
+    "source_files": [
+      "risk_data\\train.jsonl"
+    ],
+    "doc_type_counts": {
+      "case_type_summary": 57,
+      "data_standard_explainer": 1,
+      "data_standard_plan": 1,
+      "dataset_readme": 1,
+      "disposition_case": 40,
+      "emotion_case": 205,
+      "generic_case": 38,
+      "methodology": 1,
+      "risk_case": 236
+    },
+    "task_type_counts": {
+      "disposition_advice": 40,
+      "emotion_analysis": 205,
+      "generic": 38,
+      "reference": 4,
+      "risk_assessment": 236,
+      "summary": 57
+    },
+    "deduplicated_docs": 41,
+    "total_docs": 580,
+    "outputs": {
+      "combined": "E:\\风险预测和评估\\RAG_data\\kb_documents.jsonl",
+      "risk_case": "E:\\风险预测和评估\\RAG_data\\kb_risk_cases.jsonl",
+      "emotion_case": "E:\\风险预测和评估\\RAG_data\\kb_emotion_cases.jsonl",
+      "disposition_case": "E:\\风险预测和评估\\RAG_data\\kb_disposition_cases.jsonl",
+      "generic_case": "E:\\风险预测和评估\\RAG_data\\kb_generic_cases.jsonl",
+      "case_type_summary": "E:\\风险预测和评估\\RAG_data\\kb_case_summaries.jsonl",
+      "reference": "E:\\风险预测和评估\\RAG_data\\kb_reference_docs.jsonl"
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+
+        {
+            "name": "Risk Scoring (test_case_labor)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/risk_data/risk_scoring.py",
+            "cwd":"${workspaceFolder}",
+            "console": "integratedTerminal",
+            "args": [
+                "--input-file",
+                "RAG_data/test_case_labor.txt",
+                "--pretty"
+            ]
+        },
+        {
+            "name":"RAG Answer (BM25)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/RAG_data/rag_answer.py",
+            "cwd":"${workspaceFolder}",
+            "console": "integratedTerminal",
+            "args": [
+                "--question",
+                "案件类型：劳动争议。农民工工伤后急需赔偿，多次协商无果，该怎么判断风险等级？",
+                "--model",
+                "qwen3.5:4b",
+                "--topk",
+                "3",
+                "--pretty"
+            ]
+        },
+        {
+            "name":"RAG Answer (Embedding Rerank)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/RAG_data/rag_answer.py",
+            "cwd":"${workspaceFolder}",
+            "console": "integratedTerminal",
+            "args": [
+                "--question",
+                "案件类型：劳动争议。农民工工伤后急需赔偿，多次协商无果，该怎么判断风险等级？",
+                "--model",
+                "qwen3.5:4b",
+                "--embed_model",
+                "qwen3-embedding:8b",
+                "--topk",
+                "3",
+                "--pretty"
+            ]
+        }
+    ]
+}
