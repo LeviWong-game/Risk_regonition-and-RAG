@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 # 保持 risk_scoring.py 作为统一入口：
-# - 支持 `python -m risk_data.risk_scoring`
-# - 兼容 `from risk_scoring import ...` 的历史导入
+# 1. 支持 `python -m risk_data.risk_scoring`
+# 2. 兼容历史上的 `from risk_scoring import ...`
 try:
     from . import risk_engine as _engine
 except ImportError:

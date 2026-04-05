@@ -1,0 +1,32 @@
+{
+  "source_files": [
+    "train.jsonl",
+    "val.jsonl"
+  ],
+  "raw_risk_rows": 300,
+  "unique_risk_cases": 127,
+  "conflict_case_count": 30,
+  "conflict_resolution_breakdown": {
+    "heuristic_tiebreak": 12,
+    "unanimous": 62,
+    "majority_vote": 18,
+    "single_source": 35
+  },
+  "master_label_distribution": {
+    "L3": 31,
+    "L1": 33,
+    "L2": 63
+  },
+  "train_size": 101,
+  "val_size": 26,
+  "train_label_distribution": {
+    "L3": 25,
+    "L1": 26,
+    "L2": 50
+  },
+  "val_label_distribution": {
+    "L2": 13,
+    "L1": 7,
+    "L3": 6
+  }
+}

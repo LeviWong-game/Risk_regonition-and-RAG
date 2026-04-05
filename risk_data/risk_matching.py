@@ -9,146 +9,200 @@ from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 CASE_TYPE_HINTS: Dict[str, Dict[str, int]] = {
     "劳动争议": {
-        "party_complexity": 2,
+        "conflict_intensity": 2,
+        "persistence_recurrence": 2,
         "economic_livelihood_loss": 4,
         "cross_department_difficulty": 3,
         "vulnerable_urgency": 3,
     },
-    "环境污染": {
+    "工伤赔偿纠纷": {
+        "conflict_intensity": 2,
+        "persistence_recurrence": 2,
+        "safety_health_harm": 4,
+        "economic_livelihood_loss": 4,
+        "vulnerable_urgency": 4,
+    },
+    "邻里纠纷": {
+        "conflict_intensity": 2,
+        "impact_scope": 2,
+        "public_order_opinion": 2,
+    },
+    "物业纠纷": {
+        "conflict_intensity": 2,
+        "persistence_recurrence": 2,
         "impact_scope": 3,
-        "safety_health_harm": 3,
         "public_order_opinion": 3,
         "cross_department_difficulty": 3,
     },
-    "婚姻家庭": {"party_complexity": 2, "vulnerable_urgency": 3},
-    "婚姻家庭纠纷": {"party_complexity": 2, "vulnerable_urgency": 3},
-    "物业纠纷": {"impact_scope": 3, "public_order_opinion": 2},
-    "物业管理纠纷": {"impact_scope": 3, "public_order_opinion": 2},
-    "邻里纠纷": {"impact_scope": 2, "public_order_opinion": 2},
-    "房屋租赁": {"legal_factual_complexity": 3},
-    "房屋租赁纠纷": {"legal_factual_complexity": 3},
-    "土地权属": {"legal_factual_complexity": 4, "party_complexity": 3},
-    "土地权属纠纷": {"legal_factual_complexity": 4, "party_complexity": 3},
-    "消费维权": {"economic_livelihood_loss": 2},
-    "安全隐患": {"safety_health_harm": 4, "public_order_opinion": 3},
-    "人身损害": {"safety_health_harm": 4, "economic_livelihood_loss": 3},
-    "人身损害纠纷": {"safety_health_harm": 4, "economic_livelihood_loss": 3},
+    "环境污染": {
+        "conflict_intensity": 2,
+        "persistence_recurrence": 2,
+        "impact_scope": 3,
+        "safety_health_harm": 4,
+        "public_order_opinion": 3,
+        "cross_department_difficulty": 3,
+    },
+    "婚姻家庭": {
+        "conflict_intensity": 2,
+        "persistence_recurrence": 2,
+        "impact_scope": 2,
+        "vulnerable_urgency": 3,
+    },
+    "土地权属纠纷": {
+        "conflict_intensity": 2,
+        "persistence_recurrence": 2,
+        "legal_factual_complexity": 4,
+        "party_complexity": 3,
+        "impact_scope": 3,
+        "cross_department_difficulty": 4,
+    },
+    "征地拆迁": {
+        "conflict_intensity": 3,
+        "persistence_recurrence": 3,
+        "impact_scope": 4,
+        "party_complexity": 4,
+        "public_order_opinion": 4,
+        "cross_department_difficulty": 4,
+    },
+    "合同纠纷": {
+        "conflict_intensity": 2,
+        "persistence_recurrence": 2,
+        "legal_factual_complexity": 3,
+        "economic_livelihood_loss": 3,
+    },
+    "房屋租赁纠纷": {
+        "conflict_intensity": 2,
+        "persistence_recurrence": 2,
+        "legal_factual_complexity": 3,
+        "economic_livelihood_loss": 3,
+    },
+    "欠薪纠纷": {
+        "conflict_intensity": 2,
+        "persistence_recurrence": 3,
+        "economic_livelihood_loss": 4,
+        "vulnerable_urgency": 3,
+        "mediation_pressure": 3,
+    },
 }
 
 PATTERN_RULES: Dict[str, Dict[int, Tuple[str, ...]]] = {
     "conflict_intensity": {
-        2: ("纠纷", "矛盾", "投诉", "不满", "争议"),
-        3: ("争执", "对峙", "拒绝", "推诿", "僵持", "强烈不满", "苦不堪言"),
-        4: ("激烈争执", "威胁", "围堵", "报警", "过激", "拉横幅", "泼水"),
-        5: ("肢体冲突", "殴打", "持刀", "砍伤", "报复", "自杀", "爆炸"),
+        2: ("不满", "投诉", "争议", "纠纷", "口角", "矛盾", "摩擦"),
+        3: ("争吵", "对峙", "冲突", "拒绝配合", "情绪激动", "争执", "逼迫"),
+        4: ("激烈争执", "威胁", "围堵", "堵门", "报警", "拉横幅", "泼水", "停电措施"),
+        5: ("殴打", "动手", "持刀", "砍伤", "打伤", "暴力", "极端行为"),
     },
     "persistence_recurrence": {
-        2: ("再次", "反复", "持续", "迟迟"),
-        3: ("多次反映", "长期", "屡次", "一直", "反复投诉", "持续投诉", "多日"),
-        4: ("多轮调解失败", "久拖未决", "长期未解决", "屡调未果", "长期积累", "多次催讨无果"),
-        5: ("多年", "持续升级", "反复升级", "群体性积累"),
+        2: ("再次", "又来", "反复", "重复", "多日", "多次"),
+        3: ("多次反映", "持续", "长期", "一直", "多次投诉", "久拖未决", "无果", "催讨", "未支付"),
+        4: ("多轮调解失败", "屡次调解无果", "长期未解决", "反复升级", "多次协商无果"),
+        5: ("积案", "多年未决", "持续恶化", "长期积累"),
     },
     "party_complexity": {
-        2: ("双方", "业主与物业", "房东与租客", "夫妻双方"),
-        3: ("多方", "多户", "村民", "业主", "商户", "住户"),
-        4: ("群体", "多名", "多人", "村集体", "工友", "居民代表"),
-        5: ("数十人", "上百人", "大批", "涉众", "集体"),
+        2: ("双方", "业主与物业", "夫妻双方", "邻居双方"),
+        3: ("多方", "村民", "业主", "商户", "施工方", "开发商", "包工头"),
+        4: ("多户", "村集体", "业主委员会", "单位与居民", "组织参与", "多人参与"),
+        5: ("群体", "大批", "数十人", "社会人员参与", "多人聚集"),
     },
     "escalation_signals": {
-        2: ("情绪激动", "强烈不满", "拒不配合"),
-        3: ("报警", "发帖", "曝光", "维权", "拉横幅"),
-        4: ("聚集", "围堵", "上访", "网传", "舆情", "直播"),
-        5: ("扬言", "报复", "火灾", "爆炸", "群体性事件", "极端"),
+        2: ("扬言", "拒不接受", "言语过激", "录视频维权"),
+        3: ("报警", "发帖", "投诉上访", "拉横幅", "媒体曝光"),
+        4: ("聚集", "围堵", "堵门", "堵路", "舆情扩散", "网传"),
+        5: ("冲击", "打砸", "自杀威胁", "报复", "群体性事件"),
     },
     "impact_scope": {
-        2: ("家庭", "邻里", "两户", "双方"),
-        3: ("楼栋", "小区", "单位", "商铺", "村民", "住户", "居民"),
-        4: ("社区", "村集体", "多户", "多名", "多位"),
-        5: ("跨区域", "全村", "全小区", "大范围", "大批"),
+        2: ("家庭", "邻里", "两户", "楼上楼下", "住户"),
+        3: ("小区", "楼栋", "村组", "单位", "多户居民", "商户"),
+        4: ("社区", "村民", "整栋楼", "周边商户", "多人受影响"),
+        5: ("跨区域", "大范围", "全小区", "全村", "全网关注"),
     },
     "safety_health_harm": {
-        2: ("扰民", "噪音", "异味", "轻微受伤"),
-        3: ("污染", "受伤", "骨折", "消防隐患", "停电", "停水", "油烟", "污水"),
-        4: ("工伤", "起火", "火灾隐患", "严重污染", "住院", "踩踏", "坠落"),
-        5: ("爆炸", "重伤", "死亡", "中毒", "坍塌"),
+        2: ("扰民", "异味", "噪音", "轻微受伤", "轻伤", "惊吓"),
+        3: ("污染", "受伤", "骨折", "住院", "健康风险", "中毒风险", "苦不堪言"),
+        4: ("工伤", "流血", "重大隐患", "火灾隐患", "人身伤害", "摔落"),
+        5: ("重伤", "死亡", "爆炸", "火灾", "群死群伤", "生命危险"),
     },
     "economic_livelihood_loss": {
-        2: ("退款", "押金", "租金", "停车费", "物业费", "赔偿"),
-        3: ("误工费", "护理费", "停业", "停产", "生活受影响", "收益分配"),
-        4: ("工资", "欠薪", "医疗费", "急需赔偿", "家庭困难", "抚养费"),
-        5: ("生计", "无法生活", "全部积蓄", "重大损失", "断供"),
+        2: ("赔偿争议", "费用争议", "损失", "补偿", "抚养费"),
+        3: ("工资", "货款", "赔偿款", "停工", "收入受影响", "经济损失", "涨租", "租金"),
+        4: ("欠薪", "拖欠工资", "无法生活", "生计困难", "急需赔偿", "无力支付"),
+        5: ("巨额损失", "破产", "断供", "失去生活来源", "重大财产损失"),
     },
     "public_order_opinion": {
-        2: ("社区和谐", "邻里关系", "扰民"),
-        3: ("持续投诉", "多人投诉", "公共区域", "楼道", "占道", "苦不堪言"),
-        4: ("围堵", "聚集", "舆情", "上访", "网络传播"),
-        5: ("大规模舆情", "群体性事件", "秩序失控", "交通阻断"),
+        2: ("邻里关系紧张", "多次投诉", "社区和谐"),
+        3: ("社区秩序", "持续投诉", "舆情", "网络传播", "围观", "住户"),
+        4: ("聚集围观", "围堵", "堵路", "媒体关注", "舆情扩散"),
+        5: ("冲击秩序", "群体性事件", "广泛传播", "持续发酵"),
     },
     "legal_factual_complexity": {
-        2: ("责任", "争议", "协商"),
-        3: ("合同", "程序", "证据", "条款", "收费依据", "认定"),
-        4: ("权属", "继承", "工伤认定", "征地", "宅基地", "合法性"),
-        5: ("司法鉴定", "刑民交叉", "行政争议", "多重合同链"),
+        2: ("责任认定", "证据不清", "存在争议", "抚养费"),
+        3: ("合同", "协议", "程序", "举证", "鉴定", "赔偿标准", "租赁"),
+        4: ("权属", "继承", "工伤认定", "土地流转", "历史遗留", "拆迁补偿"),
+        5: ("诉讼程序复杂", "多份证据冲突", "多法律关系交织"),
     },
     "cross_department_difficulty": {
-        2: ("物业", "网格员", "社区"),
-        3: ("调解员", "街道", "居委会"),
-        4: ("联合处理", "多部门", "政府部门", "消防", "住建"),
-        5: ("公安", "法院", "应急", "司法强制", "刑事"),
+        2: ("社区协调", "物业处理", "网格员处理"),
+        3: ("街道介入", "调解员介入", "多方协调", "环保投诉", "人社协调"),
+        4: ("联合处置", "多部门", "住建", "环保", "人社", "信访", "部门联合处理"),
+        5: ("公安介入", "法院介入", "应急处置", "司法程序"),
     },
     "mediation_pressure": {
-        2: ("尽快", "尽早", "催促"),
-        3: ("急需", "限期", "马上", "立即", "苦不堪言"),
-        4: ("多次催讨", "多次催办", "久拖未决", "调解失败"),
-        5: ("随时可能", "一触即发", "立即处置", "失控"),
+        2: ("尽快处理", "尽快解决", "催促"),
+        3: ("急需", "限期", "短期内处理", "连续投诉", "申请调解"),
+        4: ("多次催办", "调解失败", "久拖不决", "反复催办"),
+        5: ("立即处理", "情况紧急", "随时失控", "拖延风险极高"),
     },
     "vulnerable_urgency": {
-        2: ("压力大", "情绪焦虑", "困难"),
-        3: ("老人", "儿童", "未成年人", "孕妇", "残疾"),
-        4: ("农民工", "家庭困难", "急需", "病人", "独居老人"),
-        5: ("重病", "危重", "孤寡", "未成年受伤", "急救"),
+        2: ("生活困难", "情绪压力", "家庭压力"),
+        3: ("老人", "儿童", "孕妇", "残疾", "学生", "孩子"),
+        4: ("工伤", "重病", "低保", "家庭困难", "失业", "急需治疗", "独自抚养"),
+        5: ("紧急救助", "未成年人受伤", "老人独居", "孕妇受伤", "危及基本生存"),
     },
 }
 
 TRIGGER_PATTERNS: Dict[str, Tuple[str, ...]] = {
-    "injury_or_violence": ("肢体冲突", "殴打", "砍伤", "重伤", "死亡", "持刀", "报复", "工伤", "骨折", "住院", "坠落"),
-    "public_safety_hazard": ("起火", "火灾", "爆炸", "消防隐患", "坍塌", "中毒", "严重污染", "私拉电线", "明火"),
-    "gathering_or_public_opinion": ("聚集", "围堵", "上访", "舆情", "网络传播", "直播", "群体性事件"),
-    "judicial_or_police": ("公安", "法院", "刑事", "司法强制", "报警"),
+    "injury_or_violence": ("殴打", "动手", "打伤", "砍伤", "流血", "重伤", "暴力", "生命危险"),
+    "public_safety_hazard": ("火灾", "爆炸", "燃气泄漏", "重大隐患", "坍塌", "中毒"),
+    "gathering_or_public_opinion": ("聚集", "围堵", "堵路", "拉横幅", "舆情", "媒体关注", "群体性事件"),
+    "judicial_or_police": ("公安介入", "警方介入", "法院受理", "立案", "司法程序"),
 }
 
 RED_FLAG_L3 = ("injury_or_violence", "public_safety_hazard", "gathering_or_public_opinion")
 RED_FLAG_L4 = ("judicial_or_police",)
 
 FIELD_ALIASES: Dict[str, Tuple[str, ...]] = {
-    "case_type": ("案件类型", "类型", "纠纷类型", "案件类别", "案由"),
-    "title": ("案件标题", "案件"),
-    "description": ("案情", "描述", "案情简介", "基本情况"),
+    "case_type": ("案件类型", "类型", "案由"),
+    "title": ("案件标题", "标题", "案件名称", "案件"),
+    "description": ("案件描述", "案情", "描述", "基本情况", "情况", "案情简介"),
 }
 
 KEYWORD_ALIASES: Dict[str, Tuple[str, ...]] = {
-    "协商无果": ("协商未果",),
-    "屡调未果": ("多次调解未果", "调解不成"),
-    "久拖未决": ("久拖不决",),
-    "多次催讨无果": ("多次催讨未果",),
-    "群体性事件": ("群体事件",),
-    "聚集": ("聚众",),
-    "上访": ("信访", "赴京上访"),
-    "舆情": ("网络舆论", "网络发酵"),
-    "欠薪": ("拖欠工资", "拖欠薪资"),
-    "工伤": ("工伤事故",),
-    "急需赔偿": ("急需补偿", "迫切索赔"),
-    "报警": ("报了警", "已报警"),
-    "维权": ("讨薪", "讨说法"),
+    "报警": ("报案", "报警求助"),
+    "拉横幅": ("打横幅",),
+    "聚集": ("聚众", "多人聚集"),
+    "围堵": ("围堵单位", "围堵大门"),
+    "欠薪": ("拖欠工资", "讨薪"),
+    "工伤": ("工地受伤", "施工受伤"),
+    "舆情": ("网络舆情", "网上传播"),
+    "法院介入": ("法院受理", "起诉到法院"),
+    "公安介入": ("警方介入", "派出所介入"),
 }
 
 CASE_TYPE_ALIASES: Dict[str, Tuple[str, ...]] = {
-    "劳动争议": ("劳动纠纷", "劳务纠纷", "劳动合同纠纷", "欠薪纠纷"),
-    "环境污染": ("污染纠纷", "生态环境纠纷", "环保纠纷"),
-    "物业纠纷": ("物业管理纠纷", "业主物业纠纷"),
-    "房屋租赁": ("租赁纠纷", "房屋租赁纠纷"),
-    "人身损害": ("人身伤害", "人身损害纠纷"),
+    "劳动争议": ("劳资纠纷", "劳动纠纷"),
+    "工伤赔偿纠纷": ("工伤纠纷", "工伤赔偿"),
+    "邻里纠纷": ("邻居纠纷", "邻里矛盾"),
+    "物业纠纷": ("物业费纠纷", "业主物业纠纷"),
+    "环境污染": ("环境纠纷", "污染纠纷"),
+    "婚姻家庭": ("婚姻家庭纠纷", "家庭纠纷"),
+    "土地权属纠纷": ("土地纠纷", "权属纠纷"),
+    "征地拆迁": ("拆迁纠纷", "征迁纠纷"),
+    "合同纠纷": ("合同争议",),
+    "房屋租赁纠纷": ("租赁纠纷", "商铺租赁纠纷", "房屋租赁"),
+    "欠薪纠纷": ("讨薪纠纷", "工资纠纷"),
 }
+
+NEGATION_WORDS: Tuple[str, ...] = ("未", "没有", "无", "并未", "尚未", "未曾", "未发生", "未出现")
 
 _PUNCT_OR_SPACE_RE = re.compile(r"[\s\W_]+", flags=re.UNICODE)
 _FUZZY_MIN_KEYWORD_LEN = 4
@@ -172,6 +226,14 @@ def _similarity_threshold(keyword_len: int) -> float:
     if keyword_len <= 6:
         return 0.88
     return 0.84
+
+
+def _is_negated_match(text: str, keyword: str) -> bool:
+    position = text.find(keyword)
+    if position < 0:
+        return False
+    window = text[max(0, position - 6):position]
+    return any(flag in window for flag in NEGATION_WORDS)
 
 
 def _fuzzy_contains(normalized_text: str, normalized_keyword: str, keyword_chars: Optional[set] = None) -> bool:
@@ -202,8 +264,7 @@ def _fuzzy_contains(normalized_text: str, normalized_keyword: str, keyword_chars
 def _expand_keyword_variants(keyword: str) -> Tuple[str, ...]:
     variants = [keyword]
     variants.extend(KEYWORD_ALIASES.get(keyword, ()))
-    deduplicated = dict.fromkeys(item for item in variants if item)
-    return tuple(deduplicated)
+    return tuple(dict.fromkeys(item for item in variants if item))
 
 
 @lru_cache(maxsize=4096)
@@ -211,9 +272,8 @@ def _keyword_variant_profiles(keyword: str) -> Tuple[Tuple[str, str, frozenset],
     profiles: List[Tuple[str, str, frozenset]] = []
     for variant in _expand_keyword_variants(keyword):
         normalized_variant = _normalize_keyword_cached(variant)
-        if not normalized_variant:
-            continue
-        profiles.append((variant, normalized_variant, frozenset(normalized_variant)))
+        if normalized_variant:
+            profiles.append((variant, normalized_variant, frozenset(normalized_variant)))
     return tuple(profiles)
 
 
@@ -231,7 +291,7 @@ def _keyword_matches(
         normalized_text_chars = set(normalized_text)
 
     for variant, normalized_variant, variant_chars in _keyword_variant_profiles(keyword):
-        if variant in text:
+        if variant in text and not _is_negated_match(text, variant):
             return True
         if normalized_variant in normalized_text:
             return True
@@ -249,19 +309,13 @@ def _case_type_matches(case_type: str, case_type_hint: str, normalized_case_type
         normalized_case_type = _normalize_for_match(case_type)
     if _keyword_matches(case_type, case_type_hint, normalized_case_type):
         return True
-    for alias in CASE_TYPE_ALIASES.get(case_type_hint, ()):
-        if _keyword_matches(case_type, alias, normalized_case_type):
-            return True
-    return False
+    return any(_keyword_matches(case_type, alias, normalized_case_type) for alias in CASE_TYPE_ALIASES.get(case_type_hint, ()))
 
 
 @lru_cache(maxsize=1024)
 def _matched_case_type_names(case_type: str) -> Tuple[str, ...]:
     normalized_case_type = _normalize_for_match(case_type)
-    matched: List[str] = []
-    for name in CASE_TYPE_HINTS:
-        if _case_type_matches(case_type, name, normalized_case_type):
-            matched.append(name)
+    matched = [name for name in CASE_TYPE_HINTS if _case_type_matches(case_type, name, normalized_case_type)]
     return tuple(matched)
 
 
@@ -269,14 +323,19 @@ def _find_keywords(text: str, keywords: Sequence[str], normalized_text: Optional
     if normalized_text is None:
         normalized_text = _normalize_for_match(text)
     normalized_text_chars = set(normalized_text)
-    return [kw for kw in keywords if _keyword_matches(text, kw, normalized_text, normalized_text_chars)]
+    return [keyword for keyword in keywords if _keyword_matches(text, keyword, normalized_text, normalized_text_chars)]
 
 
 def _extract_field(text: str, labels: Iterable[str]) -> str:
-    for label in labels:
-        match = re.search(rf"{re.escape(label)}[:：]\s*(.+)", text)
-        if match:
-            return match.group(1).strip()
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        for label in labels:
+            for separator in ("：", ":"):
+                prefix = f"{label}{separator}"
+                if line.startswith(prefix):
+                    return line[len(prefix):].strip()
     return ""
 
 
