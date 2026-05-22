@@ -1,0 +1,123 @@
+{
+  "generated_at": "2026-05-21T18:24:17",
+  "test_dataset": "risk_val_clean.jsonl",
+  "algorithm_entry": "risk_scoring.assess_case",
+  "labels": [
+    "L1",
+    "L2",
+    "L3",
+    "L4"
+  ],
+  "total_samples": 26,
+  "correct_samples": 22,
+  "error_samples": 4,
+  "accuracy": 0.8462,
+  "actual_label_distribution": {
+    "L2": 13,
+    "L1": 7,
+    "L3": 6
+  },
+  "predicted_label_distribution": {
+    "L2": 14,
+    "L1": 4,
+    "L3": 8
+  },
+  "per_label": {
+    "L1": {
+      "support": 7,
+      "predicted_count": 4,
+      "true_positive": 4,
+      "false_positive": 0,
+      "false_negative": 3,
+      "precision": 1.0,
+      "recall": 0.5714,
+      "f1": 0.7273
+    },
+    "L2": {
+      "support": 13,
+      "predicted_count": 14,
+      "true_positive": 12,
+      "false_positive": 2,
+      "false_negative": 1,
+      "precision": 0.8571,
+      "recall": 0.9231,
+      "f1": 0.8889
+    },
+    "L3": {
+      "support": 6,
+      "predicted_count": 8,
+      "true_positive": 6,
+      "false_positive": 2,
+      "false_negative": 0,
+      "precision": 0.75,
+      "recall": 1.0,
+      "f1": 0.8571
+    },
+    "L4": {
+      "support": 0,
+      "predicted_count": 0,
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    }
+  },
+  "macro_avg_all_labels": {
+    "precision": 0.6518,
+    "recall": 0.6236,
+    "f1": 0.6183
+  },
+  "macro_avg_present_labels": {
+    "precision": 0.869,
+    "recall": 0.8315,
+    "f1": 0.8244
+  },
+  "weighted_avg": {
+    "precision": 0.8709,
+    "recall": 0.8462,
+    "f1": 0.8381
+  },
+  "score_range": {
+    "evaluated_samples": 26,
+    "hit_samples": 22,
+    "hit_rate": 0.8462,
+    "mean_abs_error_to_range_midpoint": 12.0577
+  },
+  "error_analysis": {
+    "overestimated": 4,
+    "underestimated": 0,
+    "confusion_pairs": {
+      "L1->L2": 2,
+      "L1->L3": 1,
+      "L2->L3": 1
+    }
+  },
+  "confusion_matrix": {
+    "L1": {
+      "L1": 4,
+      "L2": 2,
+      "L3": 1,
+      "L4": 0
+    },
+    "L2": {
+      "L1": 0,
+      "L2": 12,
+      "L3": 1,
+      "L4": 0
+    },
+    "L3": {
+      "L1": 0,
+      "L2": 0,
+      "L3": 6,
+      "L4": 0
+    },
+    "L4": {
+      "L1": 0,
+      "L2": 0,
+      "L3": 0,
+      "L4": 0
+    }
+  }
+}

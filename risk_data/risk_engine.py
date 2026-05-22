@@ -204,6 +204,120 @@ def _apply_level_floor(score: int, trigger_flags: Sequence[str]) -> int:
     return bounded
 
 
+def _indicator_raw(indicator_results: Dict[str, RiskIndicatorResult], indicator_key: str) -> int:
+    return indicator_results[indicator_key].raw_score
+
+
+def _has_signal(text: str, keywords: Sequence[str]) -> bool:
+    return bool(_find_keywords(text, keywords, _normalize_for_match(text)))
+
+
+def _is_low_risk_boundary(
+    parsed: Dict[str, str],
+    searchable_text: str,
+    indicator_results: Dict[str, RiskIndicatorResult],
+    trigger_flags: Sequence[str],
+) -> bool:
+    if trigger_flags:
+        return False
+
+    context = "\n".join((parsed.get("case_type", ""), searchable_text))
+    if not _has_signal(context, ("邻里纠纷", "邻居纠纷", "邻里", "楼上楼下", "两户", "住户")):
+        return False
+
+    return (
+        _indicator_raw(indicator_results, "conflict_intensity") <= 2
+        and _indicator_raw(indicator_results, "persistence_recurrence") <= 1
+        and _indicator_raw(indicator_results, "escalation_signals") <= 2
+        and _indicator_raw(indicator_results, "impact_scope") <= 2
+        and _indicator_raw(indicator_results, "safety_health_harm") <= 2
+        and _indicator_raw(indicator_results, "cross_department_difficulty") <= 1
+    )
+
+
+def _has_strong_upgrade_signal(
+    searchable_text: str,
+    indicator_results: Dict[str, RiskIndicatorResult],
+    trigger_flags: Sequence[str],
+) -> bool:
+    if trigger_flags:
+        return True
+
+    strong_indicator_keys = (
+        "safety_health_harm",
+        "public_order_opinion",
+        "cross_department_difficulty",
+        "party_complexity",
+        "legal_factual_complexity",
+    )
+    if any(_indicator_raw(indicator_results, key) >= 4 for key in strong_indicator_keys):
+        return True
+    if _indicator_raw(indicator_results, "escalation_signals") >= 4:
+        return True
+
+    return _has_signal(
+        searchable_text,
+        (
+            "聚集",
+            "堵路",
+            "持刀",
+            "重伤",
+            "死亡",
+            "公安介入",
+            "法院介入",
+            "排放超标",
+            "影响居民健康",
+            "电梯故障停运",
+            "公共设施长期不可用",
+        ),
+    )
+
+
+def _has_clear_l3_compensation(
+    searchable_text: str,
+    indicator_results: Dict[str, RiskIndicatorResult],
+) -> bool:
+    clear_health_harm = _has_signal(searchable_text, ("排放超标", "影响居民健康", "居民健康"))
+    if clear_health_harm and _indicator_raw(indicator_results, "impact_scope") >= 2:
+        return True
+
+    long_facility_outage = _has_signal(searchable_text, ("电梯故障停运", "停运已两周", "公共设施长期不可用"))
+    delay_or_access_pressure = _has_signal(searchable_text, ("多次催促", "流程复杂", "拖延", "出行不便"))
+    if (
+        long_facility_outage
+        and delay_or_access_pressure
+        and _indicator_raw(indicator_results, "impact_scope") >= 3
+    ):
+        return True
+
+    return False
+
+
+def _calibrate_final_score(
+    base_score: int,
+    parsed: Dict[str, str],
+    searchable_text: str,
+    indicator_results: Dict[str, RiskIndicatorResult],
+    trigger_flags: Sequence[str],
+) -> int:
+    score = min(100, max(0, int(base_score)))
+
+    if 27 <= score <= 40 and _is_low_risk_boundary(parsed, searchable_text, indicator_results, trigger_flags):
+        score = min(score, 26)
+
+    if (
+        53 <= score <= 65
+        and not trigger_flags
+        and not _has_strong_upgrade_signal(searchable_text, indicator_results, trigger_flags)
+    ):
+        score = min(score, 52)
+
+    if score < 53 and _has_clear_l3_compensation(searchable_text, indicator_results):
+        score = 53
+
+    return min(100, max(0, score))
+
+
 def _top_indicators_for_dimension(
     dimension: str,
     indicator_results: Dict[str, RiskIndicatorResult],
@@ -416,7 +530,8 @@ def assess_case(text: str) -> RiskAssessment:
     d_score = _dimension_score("D", indicator_results)
 
     trigger_flags = _trigger_flags(searchable_text)
-    final_score = _apply_level_floor(score_formula(p_score, i_score, d_score), trigger_flags)
+    base_score = _apply_level_floor(score_formula(p_score, i_score, d_score), trigger_flags)
+    final_score = _calibrate_final_score(base_score, parsed, searchable_text, indicator_results, trigger_flags)
     level = classify_level(final_score)
 
     trigger_text = "无" if not trigger_flags else "、".join(_trigger_flag_text(flag) for flag in trigger_flags)
